@@ -39,6 +39,10 @@ public class MyFixedCapacityStackOfStrings {
         return size == 0;
     }
 
+    public boolean isFull() {
+        return size == elements.length;
+    }
+
     public int size() {
         return size;
     }
