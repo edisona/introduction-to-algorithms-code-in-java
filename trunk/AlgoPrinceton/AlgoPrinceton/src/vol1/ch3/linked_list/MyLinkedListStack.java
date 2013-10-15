@@ -40,6 +40,11 @@ public class MyLinkedListStack<E> implements Iterable<E> {
         ++size;
     }
 
+    /**
+     * 返回stack顶端元素，并将其从中删除
+     * 
+     * @return stack顶端元素。如果stack为空，则返回null。
+     */
     public E pop() {
         E item = null;
         if (size > 0) {
@@ -48,6 +53,19 @@ public class MyLinkedListStack<E> implements Iterable<E> {
             --size;
         }
         return item;
+    }
+
+    /**
+     * 返回stack顶端元素，并不从中删除
+     * 
+     * @return stack顶端元素。如果stack为空，则返回null。
+     */
+    public E peek() {
+        if (!isEmpty()) {
+            E item = first.item;
+            return item;
+        }
+        return null;
     }
 
     @Override
