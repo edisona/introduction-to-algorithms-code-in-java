@@ -1,5 +1,9 @@
 package vol1.ch3.exercises.ex14;
 
+import java.util.Iterator;
+
+import vol1.ch3.interfaces.Queue;
+
 /**
  * 1.3.14 Develop a class ResizingArrayQueueOfStrings that implements the queue
  * abstraction with a fixed-size array, and then extend your implementation to
@@ -11,7 +15,7 @@ package vol1.ch3.exercises.ex14;
 /*
  * 思路是这样的：用first和last来记录这个queue的头和尾，然后围着
  */
-public class FixedArrayQueueOfStrings {
+public class FixedArrayQueueOfStrings implements Queue<String> {
     private String[] elements;
     private int size;
     private int first;
@@ -25,21 +29,24 @@ public class FixedArrayQueueOfStrings {
         last = -1;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
-    public boolean enqueue(String item) {
+    @Override
+    public void enqueue(String item) {
         // 如果size为0，则一切从头开始，就如同新建一样
         // TODO: 应该在dequeue中做这个
 
         // 先检查queue中是否还有足够的空间
         if (size == elements.length) {
-            return false;
+            return;
         }
 
         // Queue有足够空间再加入一个新元素
@@ -55,9 +62,9 @@ public class FixedArrayQueueOfStrings {
         if (size == 1) {
             first = last;
         }
-        return true;
     }
 
+    @Override
     public String dequeue() {
         // 如果queue没有元素，则返回null
         if (size == 0) {
@@ -78,16 +85,47 @@ public class FixedArrayQueueOfStrings {
         return item;
     }
 
+    @Override
+    public Iterator<String> iterator() {
+        return new Iterator<String>() {
+            private int index = first;
+            // first是一定<=lastIndex的，然后realIndex一定是在两者之间的
+            private int realIndex = first;
+            private int lastIndex = last >= first ? last : elements.length + last;
+
+
+            @Override
+            public boolean hasNext() {
+                return realIndex != -1 && realIndex <= lastIndex;
+            }
+
+            @Override
+            public String next() {
+                String nextValue = elements[index];
+                ++index;
+                ++realIndex;
+                if (index == elements.length) {
+                    index = 0;
+                }
+                return nextValue;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("不支持删除操作！");
+            }
+        };
+    }
+
     private void state() {
         String format = "%-8s";
-        System.out
-                .println("----------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------");
         System.out.println("---- QUEUE STATE ----");
-        System.out.println("Size = " + size + ", first = " + first
-                + ", last = " + last);
+        System.out.println("Size = " + size + ", first = " + first + ", last = " + last);
         for (int i = 0; i < elements.length; ++i) {
             System.out.printf(format, elements[i]);
         }
+
         System.out.println();
         for (int i = 0; i < elements.length; ++i) {
             if (i == first) {
@@ -103,8 +141,7 @@ public class FixedArrayQueueOfStrings {
             }
         }
         System.out.println();
-        System.out
-                .println("----------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------");
     }
 
     public static void main(String[] args) {

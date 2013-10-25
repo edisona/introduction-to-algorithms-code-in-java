@@ -3,6 +3,8 @@ package vol1.ch3.linked_list;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import vol1.ch3.interfaces.Queue;
+
 /**
  * FIFO queue
  * 
@@ -10,7 +12,7 @@ import java.util.Scanner;
  * 
  * @param <E>
  */
-public class MyLinkedListQueue<E> implements Iterable<E> {
+public class MyLinkedListQueue<E> implements Queue<E> {
     private static class Node<E> {
         private E item;
         private Node<E> next;
@@ -28,14 +30,17 @@ public class MyLinkedListQueue<E> implements Iterable<E> {
         size = 0;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void enqueue(E item) {
         Node<E> newNode = new Node<E>();
         newNode.item = item;
@@ -51,6 +56,7 @@ public class MyLinkedListQueue<E> implements Iterable<E> {
         }
     }
 
+    @Override
     public E dequeue() {
         if (first != null) {
             E item = first.item;

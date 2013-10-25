@@ -1,5 +1,9 @@
 package vol1.ch3.exercises.ex14;
 
+import java.util.Iterator;
+
+import vol1.ch3.interfaces.Queue;
+
 
 /**
  * 1.3.14 Develop a class ResizingArrayQueueOfStrings that implements the queue
@@ -12,7 +16,7 @@ package vol1.ch3.exercises.ex14;
 /*
  * 思路是这样的：用first和last来记录这个queue的头和尾，然后围着转圈圈 如果需要增加储存空间，则把数组从新排列一下（把first弄成0）
  */
-public class ResizedArrayQueueOfStrings {
+public class ResizedArrayQueueOfStrings implements Queue<String> {
     private String[] elements;
     private int size;
     private int first;
@@ -30,14 +34,17 @@ public class ResizedArrayQueueOfStrings {
         last = -1;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void enqueue(String item) {
         // 先检查queue中是否还有足够的空间
         if (size == elements.length) {
@@ -92,6 +99,7 @@ public class ResizedArrayQueueOfStrings {
         // System.out.println("Resizing finished");
     }
 
+    @Override
     public String dequeue() {
         // 如果queue没有元素，则返回null
         if (size == 0) {
@@ -114,6 +122,38 @@ public class ResizedArrayQueueOfStrings {
             first = last = -1;
         }
         return item;
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return new Iterator<String>() {
+            private int index = first;
+            // first是一定<=lastIndex的，然后realIndex一定是在两者之间的
+            private int realIndex = first;
+            private int lastIndex = last >= first ? last : elements.length + last;
+
+
+            @Override
+            public boolean hasNext() {
+                return realIndex != -1 && realIndex <= lastIndex;
+            }
+
+            @Override
+            public String next() {
+                String nextValue = elements[index];
+                ++index;
+                ++realIndex;
+                if (index == elements.length) {
+                    index = 0;
+                }
+                return nextValue;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("不支持删除操作！");
+            }
+        };
     }
 
     private void state() {
