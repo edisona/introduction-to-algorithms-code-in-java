@@ -1,5 +1,6 @@
 package vol1.ch3.exercises.ex35_36_random_queue;
 
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -19,10 +20,13 @@ import java.util.Random;
  * and return the last object, as in ResizingArrayStack. Write a client that deals bridge hands (13 cards each)
  * usingRandomQueue<Card>.
  * 
+ * 1.3.36 Random iterator. Write an iterator for RandomQueue<Item> from the previous exercise that returns the items in
+ * random order.
+ * 
  * @author libojuve@gmail.com
  * 
  */
-public class RandomQueue<E> {
+public class RandomQueue<E> implements Iterable<E> {
     private Object[] elements;
     private int size;
 
@@ -112,10 +116,51 @@ public class RandomQueue<E> {
         System.out.println("-------------------------");
     }
 
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<E>() {
+
+            private int nb = 0;
+            private boolean[] iterated = new boolean[size];
+            private Random random = new Random();
+
+
+            @Override
+            public boolean hasNext() {
+                return nb < size;
+            }
+
+            @Override
+            public E next() {
+                int index;
+                do {
+                    index = random.nextInt(size);
+                } while (iterated[index]);
+                iterated[index] = true;
+                E element = (E) elements[index];
+                ++nb;
+                return element;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+
     public static void main(String[] args) {
 
         RandomQueue<Integer> queue = new RandomQueue<Integer>();
         queue.printState();
+        System.out.println("=========== Iteration ===========");
+        StringBuilder sb = new StringBuilder();
+        for (Integer i : queue) {
+            sb.append(i);
+            sb.append(", ");
+        }
+        System.out.println(sb);
 
         queue.enqueue(1);
         queue.printState();
@@ -137,6 +182,46 @@ public class RandomQueue<E> {
         System.out.println(queue.sample());
         System.out.println(queue.sample());
         System.out.println(queue.sample());
+
+        System.out.println("=========== Iteration ===========");
+        sb.setLength(0);
+        for (Integer i : queue) {
+            sb.append(i);
+            sb.append(", ");
+        }
+        System.out.println(sb);
+
+        System.out.println("=========== Iteration ===========");
+        sb.setLength(0);
+        for (Integer i : queue) {
+            sb.append(i);
+            sb.append(", ");
+        }
+        System.out.println(sb);
+
+        System.out.println("=========== Iteration ===========");
+        sb.setLength(0);
+        for (Integer i : queue) {
+            sb.append(i);
+            sb.append(", ");
+        }
+        System.out.println(sb);
+
+        System.out.println("=========== Iteration ===========");
+        sb.setLength(0);
+        for (Integer i : queue) {
+            sb.append(i);
+            sb.append(", ");
+        }
+        System.out.println(sb);
+
+        System.out.println("=========== Iteration ===========");
+        sb.setLength(0);
+        for (Integer i : queue) {
+            sb.append(i);
+            sb.append(", ");
+        }
+        System.out.println(sb);
 
         System.out.println(queue.dequeue());
         queue.printState();
